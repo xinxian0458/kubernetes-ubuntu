@@ -34,5 +34,5 @@ cp init_conf/kubelet.conf init_conf/kube-proxy.conf /etc/init/
 cp initd_scripts/kubelet initd_scripts/kube-proxy /etc/init.d/
 
 # copy default configs
-cp default_scripts/kubelet initd_scripts/kube-proxy /etc/default/
+cp default_scripts/kubelet default_scripts/kube-proxy /etc/default/
 
