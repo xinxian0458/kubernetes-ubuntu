@@ -1,0 +1,8 @@
+# Flanneld Upstart and SysVinit configuration file
+
+# Customize flanneld location
+# FLANNELD="/opt/bin/flanneld"
+
+# Use FLANNELD_OPTS to modify the start/restart options
+FLANNELD_OPTS="-etcd-endpoints http://192.168.17.134:4001"
+# Add more envionrment settings used by etcd here

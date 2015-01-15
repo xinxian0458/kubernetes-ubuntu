@@ -28,11 +28,17 @@ then
 fi
 
 # copy /etc/init files
-cp init_conf/kubelet.conf init_conf/kube-proxy.conf /etc/init/
+cp init_conf/kubelet.conf /etc/init/
+cp init_conf/kube-proxy.conf /etc/init/
+cp init_conf/flanneld_minion.conf /etc/init/flanneld.conf
 
 # copy /etc/initd/ files
-cp initd_scripts/kubelet initd_scripts/kube-proxy /etc/init.d/
+cp initd_scripts/kubelet /etc/init.d/
+cp initd_scripts/kube-proxy /etc/init.d/
+cp initd_scripts/flanneld /etc/init.d/flanneld
 
 # copy default configs
-cp default_scripts/kubelet initd_scripts/kube-proxy /etc/default/
+cp default_scripts/kubelet /etc/default/
+cp default_scripts/kube-proxy /etc/default/
+cp default_scripts/flanneld_minion /etc/default/flanneld
 

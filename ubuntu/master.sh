@@ -34,18 +34,21 @@ fi
 
 # copy /etc/init files
 cp init_conf/etcd.conf /etc/init/
+cp init_conf/flanneld_master.conf /etc/init/flanneld.conf
 cp init_conf/kube-apiserver.conf /etc/init/
 cp init_conf/kube-controller-manager.conf /etc/init/
 cp init_conf/kube-scheduler.conf /etc/init/
 
 # copy /etc/initd/ files
 cp initd_scripts/etcd /etc/init.d/
+cp initd_scripts/flanneld /etc/init.d/
 cp initd_scripts/kube-apiserver /etc/init.d/
 cp initd_scripts/kube-controller-manager /etc/init.d/
 cp initd_scripts/kube-scheduler /etc/init.d/
 
 # copy default configs
 cp default_scripts/etcd /etc/default/
+cp default_scripts/flanneld_master /etc/default/flanneld
 cp default_scripts/kube-apiserver /etc/default/
 cp default_scripts/kube-controller-manager /etc/default/
 cp default_scripts/kube-scheduler /etc/default/

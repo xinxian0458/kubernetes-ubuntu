@@ -1,0 +1,100 @@
+#!/bin/sh
+set -e
+
+### BEGIN INIT INFO
+# Provides:           flanneld
+# Required-Start:     $etcd
+# Required-Stop:      
+# Should-Start:       
+# Should-Stop:        
+# Default-Start:      
+# Default-Stop:       
+# Short-Description:  flannel is an etcd backed overlay network for containers
+# Description:
+#  http://www.github.com/coreos/flanneld
+### END INIT INFO
+
+export PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:/opt/bin:
+
+BASE=$(basename $0)
+
+# modify these in /etc/default/$BASE (/etc/default/flanneld)
+FLANNELD=/opt/bin/$BASE
+# This is the pid file managed by flanneld itself
+FLANNELD_PIDFILE=/var/run/$BASE.pid
+FLANNELD_LOGFILE=/var/log/$BASE.log
+FLANNELD_OPTS=""
+FLANNELD_DESC="Flanneld"
+
+# Get lsb functions
+. /lib/lsb/init-functions
+
+if [ -f /etc/default/$BASE ]; then
+	. /etc/default/$BASE
+fi
+
+# see also init_is_upstart in /lib/lsb/init-functions (which isn't available in Ubuntu 12.04, or we'd use it)
+if false && [ -x /sbin/initctl ] && /sbin/initctl version 2>/dev/null | grep -q upstart; then
+	log_failure_msg "$FLANNELD_DESC is managed via upstart, try using service $BASE $1"
+	exit 1
+fi
+
+# Check etcd is present
+if [ ! -x $FLANNELD ]; then
+	log_failure_msg "$FLANNELD not present or not executable"
+	exit 1
+fi
+
+fail_unless_root() {
+	if [ "$(id -u)" != '0' ]; then
+		log_failure_msg "$FLANNELD_DESC must be run as root"
+		exit 1
+	fi
+}
+
+FLANNELD_START="start-stop-daemon \
+--start \
+--background \
+--quiet \
+--exec $FLANNELD \
+--make-pidfile \
+--pidfile $FLANNELD_PIDFILE \
+-- $FLANNELD_OPTS \
+>> $FLANNELD_LOGFILE 2>&1"
+
+FLANNELD_STOP="start-stop-daemon \
+--stop \
+--pidfile $FLANNELD_PIDFILE"
+
+case "$1" in
+	start)
+		fail_unless_root
+		log_begin_msg "Starting $FLANNELD_DESC: $BASE"
+        $FLANNELD_START
+		log_end_msg $?
+		;;
+
+	stop)
+		fail_unless_root
+		log_begin_msg "Stopping $FLANNELD_DESC: $BASE"
+        $FLANNELD_STOP
+		log_end_msg $?
+		;;
+
+	restart | force-reload)
+		fail_unless_root
+		log_begin_msg "Restarting $FLANNELD_DESC: $BASE"
+        $FLANNELD_STOP
+        $FLANNELD_START
+		log_end_msg $?
+		;;
+
+	status)
+		status_of_proc -p "$FLANNELD_PIDFILE" "$FLANNELD" "$FLANNELD_DESC"
+		;;
+
+	*)
+		echo "Usage: $0 {start|stop|restart|status}"
+		exit 1
+		;;
+esac

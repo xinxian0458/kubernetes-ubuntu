@@ -1,0 +1,8 @@
+# Flanneld Upstart and SysVinit configuration file
+
+# Customize flanneld location
+# FLANNELD="/opt/bin/flanneld"
+
+# Use FLANNELD_OPTS to modify the start/restart options
+FLANNELD_OPTS=""
+# Add more envionrment settings used by etcd here
